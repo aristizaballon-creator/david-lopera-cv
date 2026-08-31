@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0b0907;
+  --color-bg-sidebar: #0e0b09;
+  --color-bg-card: #141009;
+  --color-cream: #e4d8c0;
+  --color-cream-dim: #9a8e7a;
+  --color-orange: #c85a28;
+  --color-orange-light: #e06b30;
+  --color-gold: #b8913f;
+  
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-cream);
+    font-family: var(--font-body);
+  }
+
+  /* Animación fadeUp del original */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.7s ease both;
+  }
+
+  /* Scrollbar personalizado */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--color-orange); border-radius: 2px; }
+}
+
+/* Efectos de la línea naranja de las tarjetas de experiencia */
+.exp-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px; height: 0;
+  background: var(--color-orange);
+  transition: height 0.4s ease;
+}
+.exp-card:hover::before { height: 100%; }
+.exp-card.featured::before { height: 100%; }

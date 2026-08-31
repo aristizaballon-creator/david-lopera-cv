@@ -1,0 +1,133 @@
+---
+import '../styles/global.css';
+import { proyectos } from '../data/projects';
+import { contacto } from '../data/cv';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+<head>
+  <link rel="icon" type="image/png" href="/src/assets/favicon.png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="flex min-h-screen overflow-x-hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="w-[240px] min-h-screen bg-bg-sidebar border-r border-cream/10 fixed top-0 left-0 flex flex-col py-10 z-50 transform -translate-x-full md:translate-x-0 transition-transform">
+    <div class="px-7 pb-9 border-b border-cream/10">
+      <div class="font-body text-[9px] font-medium tracking-[3px] uppercase text-orange mb-2">Portfolio</div>
+      <div class="font-display text-[26px] tracking-[1px] leading-[1.1] text-cream">DAVID<br>LOPERA</div>
+    </div>
+
+    <nav class="flex-1 py-8 overflow-y-auto">
+      <div class="text-[8px] tracking-[3px] uppercase text-cream-dim px-7 mb-3 mt-2">Navegación</div>
+      <a href="#hero" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5 active">
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Inicio
+      </a>
+      <a href="#perfil" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Perfil
+      </a>
+      <a href="#experiencia" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Experiencia
+      </a>
+      <a href="#educacion" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Educación
+      </a>
+      <a href="#habilidades" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Habilidades
+      </a>
+      <a href="#proyectos" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Proyectos
+      </a>
+      <a href="#contacto" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Contacto
+      </a>
+
+      <div class="text-[8px] tracking-[3px] uppercase text-cream-dim px-7 mb-3 mt-7">Proyectos</div>
+      {proyectos.map((proyecto) => (
+        <a
+          href={`#proyecto-${proyecto.id}`}
+          class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5"
+        >
+          <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>{proyecto.titulo}
+        </a>
+      ))}
+      <a
+        href={contacto.behance}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5"
+      >
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Ver Portfolio
+      </a>
+    </nav>
+
+    <div class="px-7 py-6 border-t border-cream/10 text-[10px] leading-[2] text-cream-dim">
+      <div class="flex items-center gap-2 mb-1">
+        <svg class="w-2.5 h-2.5 shrink-0 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <a href={`mailto:${contacto.email}`} class="hover:text-orange transition-colors">{contacto.email}</a>
+      </div>
+      <div class="flex items-center gap-2 mb-1">
+        <svg class="w-2.5 h-2.5 shrink-0 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l1.17-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>{contacto.telefono}</span>
+      </div>
+      <div class="flex items-center gap-2 mb-1">
+        <svg class="w-2.5 h-2.5 shrink-0 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Medellín, Colombia</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 md:ml-[240px] min-h-screen">
+    <slot />
+  </main>
+
+  <script>
+    // Resalta el ítem de menú de la sección visible (igual al original)
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll<HTMLAnchorElement>('.nav-item[href^="#"]');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navItems.forEach(item => {
+            item.classList.remove('active', 'text-cream', 'border-orange', 'bg-orange/5');
+            item.querySelector('.dot')?.classList.remove('opacity-100');
+
+            if (item.getAttribute('href') === '#' + entry.target.id) {
+              item.classList.add('active', 'text-cream', 'border-orange', 'bg-orange/5');
+              item.querySelector('.dot')?.classList.add('opacity-100');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.35 });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Scroll suave al hacer clic, sin ensuciar la URL con el hash (igual al original)
+    navItems.forEach(item => {
+      item.addEventListener('click', e => {
+        const href = item.getAttribute('href');
+        if (!href || href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
