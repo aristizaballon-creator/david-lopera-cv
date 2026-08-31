@@ -117,7 +117,7 @@ export const proyectos: Proyecto[] = [
     id: "freelo",
     titulo: "FREELO",
     rol: "Realizador de contenidos audiovisuales",
-    descripcion: "TODO: completar descripción del proyecto.",
+    descripcion: "Creación de contenidos audiovisuales para plataformas y redes sociales",
     videos: [
       { id: "W4gb4ESJvyw", titulo: "Short 1", tipo: "vertical" },
       { id: "b_RM3xvjKq8", titulo: "Short 2", tipo: "vertical" },
