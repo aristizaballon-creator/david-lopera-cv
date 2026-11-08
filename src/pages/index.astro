@@ -2,70 +2,66 @@
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { proyectos } from '../data/projects';
-import { experiencia, educacion, habilidades, contacto } from '../data/cv';
+import { experiencia, educacion, habilidades, contacto, ubicacion } from '../data/cv';
 import { Image } from 'astro:assets';
 import davidHeader from '../assets/davidheader5.jpg';
 ---
 
 <Layout title="David Lopera — Comunicador Audiovisual">
 
-  <section id="hero" class="min-h-screen flex flex-col justify-end relative overflow-hidden py-20 px-8 md:px-16 border-b border-cream/10 animate-fade-up" style="background: radial-gradient(ellipse at 80% 20%, rgba(200,90,40,0.12) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(184,145,63,0.06) 0%, transparent 50%), var(--color-bg);">
+  <section id="hero" class="min-h-[calc(100svh-3.5rem)] md:min-h-svh flex flex-col justify-end relative isolate overflow-hidden pt-28 pb-14 md:py-20 px-5 sm:px-8 md:px-16 border-b border-cream/10">
 
-  <Image
-  src={davidHeader}
-  alt="David Lopera"
-  class="absolute inset-0 w-full h-full object-cover -z-20"
-  loading="eager"
-  fetchpriority="high"
-/>
+    <Image
+      src={davidHeader}
+      alt="David Lopera"
+      widths={[640, 960, 1280, 1920, 2560]}
+      sizes="(min-width: 768px) calc(100vw - 240px), 100vw"
+      quality={72}
+      class="absolute inset-0 w-full h-full object-cover object-[70%_center] -z-20"
+      loading="eager"
+      fetchpriority="high"
+    />
 
-  <div
-    class="absolute inset-0 -z-10"
-    style="background:
-      linear-gradient(90deg, rgba(11,9,7,0.95) 0%, rgba(11,9,7,0.7) 40%, rgba(11,9,7,0.15) 100%),
-      linear-gradient(0deg, rgba(11,9,7,0.85) 0%, transparent 45%),
-      radial-gradient(ellipse at 80% 20%, rgba(200,90,40,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse at 20% 80%, rgba(184,145,63,0.06) 0%, transparent 50%);"
-  ></div>
+    <div class="hero-overlay absolute inset-0 -z-10" aria-hidden="true"></div>
 
-    <div class="absolute top-12 right-8 md:right-16 text-right animate-fade-up" style="animation-delay: 0.6s;">
+    <div class="absolute top-6 md:top-12 right-5 sm:right-8 md:right-16 text-right animate-fade-up pointer-events-none" style="animation-delay: 0.6s;" aria-hidden="true">
       <span class="font-display text-[18px] tracking-[3px] text-cream-dim block mb-1">Believe</span>
-      <span class="font-display text-[80px] tracking-[4px] text-orange leading-none opacity-20">That.</span>
+      <span class="font-display text-[56px] md:text-[80px] tracking-[4px] text-orange leading-none opacity-25">That.</span>
     </div>
 
-    <div class="text-[9px] tracking-[5px] uppercase text-orange mb-5 font-medium animate-fade-up" style="animation-delay: 0.1s;">Comunicador Audiovisual · Content Editor</div>
-    <h1 class="font-display text-[clamp(72px,9vw,130px)] tracking-[3px] leading-[0.92] text-cream mb-6 animate-fade-up" style="animation-delay: 0.2s;">
+    <div class="text-[10px] tracking-[5px] uppercase text-orange mb-5 font-medium animate-fade-up" style="animation-delay: 0.1s;">Comunicador Audiovisual · Content Editor</div>
+    <h1 class="font-display text-[clamp(64px,9vw,130px)] tracking-[3px] leading-[0.92] text-cream mb-6 animate-fade-up" style="animation-delay: 0.2s;">
       David
       <span class="block text-orange">Lopera</span>
     </h1>
-    <p class="font-serif text-[20px] italic font-light text-cream-dim max-w-[460px] leading-[1.6] mb-12 animate-fade-up" style="animation-delay: 0.35s;">
+    <p class="font-serif text-[18px] sm:text-[20px] italic font-light text-cream-dim max-w-[460px] leading-[1.6] mb-10 md:mb-12 animate-fade-up" style="animation-delay: 0.35s;">
       Creando narrativas audiovisuales que conectan, mueven
-      y dejan huella — desde Medellín para el mundo.
+      y dejan huella — desde Medellín y Bogotá para el mundo.
     </p>
 
-    <div class="flex flex-wrap gap-12 border-t border-cream/10 pt-8 animate-fade-up" style="animation-delay: 0.5s;">
+    <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-8 gap-y-6 sm:gap-12 border-t border-cream/10 pt-8 animate-fade-up" style="animation-delay: 0.5s;">
       <div>
         <div class="font-display text-[36px] text-cream tracking-[1px]">9+</div>
-        <div class="text-[9px] tracking-[3px] uppercase text-cream-dim mt-0.5">Años de experiencia</div>
+        <div class="text-[10px] tracking-[3px] uppercase text-cream-dim mt-0.5">Años de experiencia</div>
       </div>
       <div>
-        <div class="font-display text-[36px] text-cream tracking-[1px]">8</div>
-        <div class="text-[9px] tracking-[3px] uppercase text-cream-dim mt-0.5">Proyectos / Empresas</div>
+        <div class="font-display text-[36px] text-cream tracking-[1px]">{experiencia.length}</div>
+        <div class="text-[10px] tracking-[3px] uppercase text-cream-dim mt-0.5">Proyectos / Empresas</div>
       </div>
       <div>
         <div class="font-display text-[36px] text-cream tracking-[1px]">B2</div>
-        <div class="text-[9px] tracking-[3px] uppercase text-cream-dim mt-0.5">Nivel de inglés</div>
+        <div class="text-[10px] tracking-[3px] uppercase text-cream-dim mt-0.5">Nivel de inglés</div>
       </div>
       <div>
         <div class="font-display text-[36px] text-cream tracking-[1px]">∞</div>
-        <div class="text-[9px] tracking-[3px] uppercase text-cream-dim mt-0.5">Historias por contar</div>
+        <div class="text-[10px] tracking-[3px] uppercase text-cream-dim mt-0.5">Historias por contar</div>
       </div>
     </div>
   </section>
 
-  <section id="perfil" class="py-20 px-8 md:px-16 border-b border-cream/10 animate-fade-up">
-    <div class="text-[9px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Perfil</div>
-    <h2 class="font-display text-[64px] tracking-[2px] leading-none text-cream mb-2">QUIÉN<br>SOY</h2>
+  <section id="perfil" class="py-16 md:py-20 px-5 sm:px-8 md:px-16 border-b border-cream/10 reveal">
+    <div class="text-[10px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Perfil</div>
+    <h2 class="font-display text-[clamp(44px,11vw,64px)] tracking-[2px] leading-none whitespace-nowrap text-cream mb-2">QUIÉN SOY</h2>
     <p class="font-serif text-[18px] italic font-light text-cream-dim mb-12">Contexto · Visión · Enfoque</p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
@@ -78,57 +74,57 @@ import davidHeader from '../assets/davidheader5.jpg';
         </p>
 
         <div class="flex flex-wrap gap-2.5 mt-6">
-          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-cream hover:border-orange transition-all">Edición de Video</span>
-          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-cream hover:border-orange transition-all">Animación</span>
-          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-cream hover:border-orange transition-all">Producción</span>
-          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-cream hover:border-orange transition-all">CCV / Redes</span>
-          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-cream hover:border-orange transition-all">Motion Graphics</span>
-          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-cream hover:border-orange transition-all">Storytelling</span>
+          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-white hover:border-orange transition-colors">Edición de Video</span>
+          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-white hover:border-orange transition-colors">Animación</span>
+          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-white hover:border-orange transition-colors">Producción</span>
+          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-white hover:border-orange transition-colors">CCV / Redes</span>
+          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-white hover:border-orange transition-colors">Motion Graphics</span>
+          <span class="border border-orange/40 px-4 py-1.5 text-[10px] tracking-[2px] uppercase text-orange-light hover:bg-orange hover:text-white hover:border-orange transition-colors">Storytelling</span>
         </div>
       </div>
 
       <div>
-        <div class="text-[9px] tracking-[4px] uppercase text-orange mb-5 font-medium">Idiomas</div>
+        <div class="text-[10px] tracking-[4px] uppercase text-orange mb-5 font-medium">Idiomas</div>
         <div>
           <div class="flex items-center gap-4 mb-3.5">
             <div class="text-[11px] tracking-[2px] uppercase text-cream w-20 font-medium">Español</div>
             <div class="flex-1 h-0.5 bg-cream/10"><div class="h-full bg-gradient-to-r from-orange to-gold w-full"></div></div>
-            <div class="text-[9px] tracking-[2px] uppercase text-cream-dim">Nativo</div>
+            <div class="text-[10px] tracking-[2px] uppercase text-cream-dim">Nativo</div>
           </div>
           <div class="flex items-center gap-4 mb-3.5">
             <div class="text-[11px] tracking-[2px] uppercase text-cream w-20 font-medium">Inglés</div>
             <div class="flex-1 h-0.5 bg-cream/10"><div class="h-full bg-gradient-to-r from-orange to-gold w-[65%]"></div></div>
-            <div class="text-[9px] tracking-[2px] uppercase text-cream-dim">B2</div>
+            <div class="text-[10px] tracking-[2px] uppercase text-cream-dim">B2</div>
           </div>
         </div>
         <div class="mt-10">
-          <div class="text-[9px] tracking-[4px] uppercase text-orange mb-3 font-medium">Disponibilidad</div>
-          <p class="text-[13px] text-cream-dim">Freelance & proyectos de tiempo completo.<br>Trabajo remoto y presencial en Medellín.</p>
+          <div class="text-[10px] tracking-[4px] uppercase text-orange mb-3 font-medium">Disponibilidad</div>
+          <p class="text-[13px] text-cream-dim">Freelance & proyectos de tiempo completo.<br>Trabajo remoto y presencial en Medellín y Bogotá.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="experiencia" class="py-20 px-8 md:px-16 border-b border-cream/10 animate-fade-up">
-    <div class="text-[9px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Trayectoria</div>
-    <h2 class="font-display text-[64px] tracking-[2px] leading-none text-cream mb-2">EXPERIENCIA<br></h2>
+  <section id="experiencia" class="py-16 md:py-20 px-5 sm:px-8 md:px-16 border-b border-cream/10 reveal">
+    <div class="text-[10px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Trayectoria</div>
+    <h2 class="font-display text-[clamp(44px,11vw,64px)] tracking-[2px] leading-none whitespace-nowrap text-cream mb-2">EXPERIENCIA</h2>
     <p class="font-serif text-[18px] italic font-light text-cream-dim mb-12">Proyectos que definen el trabajo</p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-3">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-3">
       {experiencia.map((exp) => (
         exp.featured ? (
-          <div class="exp-card featured md:col-span-2 grid md:grid-cols-[1fr_auto] gap-8 items-center border border-orange/40 bg-gradient-to-br from-orange/5 to-bg-card p-7 relative transition-transform hover:-translate-y-1 cursor-default">
+          <div class="exp-card featured lg:col-span-2 grid lg:grid-cols-[1fr_auto] gap-8 items-center border border-orange/40 bg-gradient-to-br from-orange/5 to-bg-card p-5 sm:p-7 relative transition-transform duration-300 md:hover:-translate-y-1">
             <div>
-              <div class="text-[9px] tracking-[3px] uppercase text-orange mb-2.5 font-medium">{exp.fecha}</div>
+              <div class="text-[10px] tracking-[3px] uppercase text-orange mb-2.5 font-medium">{exp.fecha}</div>
               <div class="font-display text-[22px] tracking-[1px] text-cream mb-1">{exp.empresa}</div>
               <div class="text-[11px] tracking-[2px] uppercase text-gold mb-3.5 font-medium">{exp.rol}</div>
               <p class="text-[13px] leading-[1.7] text-cream-dim font-light">{exp.descripcion}</p>
             </div>
-            <div class="font-display text-[48px] tracking-[2px] text-orange opacity-15 whitespace-nowrap hidden md:block">NOW</div>
+            <div class="font-display text-[48px] tracking-[2px] text-orange opacity-15 whitespace-nowrap hidden lg:block" aria-hidden="true">NOW</div>
           </div>
         ) : (
-          <div class="exp-card bg-bg-card border border-cream/10 p-7 relative transition-transform hover:-translate-y-1 hover:border-orange/40 cursor-default">
-            <div class="text-[9px] tracking-[3px] uppercase text-orange mb-2.5 font-medium">{exp.fecha}</div>
+          <div class="exp-card bg-bg-card border border-cream/10 p-5 sm:p-7 relative transition duration-300 md:hover:-translate-y-1 hover:border-orange/40">
+            <div class="text-[10px] tracking-[3px] uppercase text-orange mb-2.5 font-medium">{exp.fecha}</div>
             <div class="font-display text-[22px] tracking-[1px] text-cream mb-1">{exp.empresa}</div>
             <div class="text-[11px] tracking-[2px] uppercase text-gold mb-3.5 font-medium">{exp.rol}</div>
             <p class="text-[13px] leading-[1.7] text-cream-dim font-light">{exp.descripcion}</p>
@@ -138,14 +134,14 @@ import davidHeader from '../assets/davidheader5.jpg';
     </div>
   </section>
 
-  <section id="educacion" class="py-20 px-8 md:px-16 border-b border-cream/10 animate-fade-up">
-    <div class="text-[9px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Formación</div>
-    <h2 class="font-display text-[64px] tracking-[2px] leading-none text-cream mb-2">EDUCACIÓN<br></h2>
+  <section id="educacion" class="py-16 md:py-20 px-5 sm:px-8 md:px-16 border-b border-cream/10 reveal">
+    <div class="text-[10px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Formación</div>
+    <h2 class="font-display text-[clamp(44px,11vw,64px)] tracking-[2px] leading-none whitespace-nowrap text-cream mb-2">EDUCACIÓN</h2>
     <p class="font-serif text-[18px] italic font-light text-cream-dim mb-12">La base técnica y conceptual</p>
 
     <div class="flex flex-col mt-3">
       {educacion.map((edu, i) => (
-        <div class={`grid grid-cols-[120px_1fr] gap-8 py-7 items-start ${i < educacion.length - 1 ? 'border-b border-cream/10' : ''}`}>
+        <div class={`grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-1.5 sm:gap-8 py-6 sm:py-7 items-start ${i < educacion.length - 1 ? 'border-b border-cream/10' : ''}`}>
           <div class="font-display text-[14px] tracking-[2px] text-orange pt-1">{edu.anio}</div>
           <div>
             <div class="font-serif text-[20px] font-semibold text-cream mb-1">{edu.titulo}</div>
@@ -156,15 +152,15 @@ import davidHeader from '../assets/davidheader5.jpg';
     </div>
   </section>
 
-  <section id="habilidades" class="py-20 px-8 md:px-16 border-b border-cream/10 animate-fade-up">
-    <div class="text-[9px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Toolkit</div>
-    <h2 class="font-display text-[64px] tracking-[2px] leading-none text-cream mb-2">HABILIDADES<br></h2>
+  <section id="habilidades" class="py-16 md:py-20 px-5 sm:px-8 md:px-16 border-b border-cream/10 reveal">
+    <div class="text-[10px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Toolkit</div>
+    <h2 class="font-display text-[clamp(44px,11vw,64px)] tracking-[2px] leading-none whitespace-nowrap text-cream mb-2">HABILIDADES</h2>
     <p class="font-serif text-[18px] italic font-light text-cream-dim mb-12">Las herramientas del oficio</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-3">
       {habilidades.map((grupo) => (
         <div class="bg-bg-card border border-cream/10 p-6">
-          <div class="text-[9px] tracking-[3px] uppercase text-orange mb-4 font-medium">{grupo.titulo}</div>
+          <div class="text-[10px] tracking-[3px] uppercase text-orange mb-4 font-medium">{grupo.titulo}</div>
           {grupo.items.map((item, i) => (
             <div class={`flex items-center gap-2.5 py-1.5 ${i < grupo.items.length - 1 ? 'border-b border-cream/5' : ''}`}>
               <span class="w-[3px] h-[3px] rounded-full bg-orange shrink-0"></span>
@@ -176,67 +172,63 @@ import davidHeader from '../assets/davidheader5.jpg';
     </div>
   </section>
 
-  <section id="proyectos" class="py-20 px-8 md:px-16 border-b border-cream/10 animate-fade-up">
-    <div class="text-[9px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Videos</div>
-    <h2 class="font-display text-[64px] tracking-[2px] leading-none text-cream mb-2">PROYECTOS<br></h2>
-    <p class="font-serif text-[18px] italic font-light text-cream-dim mb-12"></p>
+  <section id="proyectos" class="py-16 md:py-20 px-5 sm:px-8 md:px-16 border-b border-cream/10 reveal">
+    <div class="text-[10px] tracking-[4px] uppercase text-orange mb-4 font-medium">Case Study — Videos</div>
+    <h2 class="font-display text-[clamp(44px,11vw,64px)] tracking-[2px] leading-none whitespace-nowrap text-cream mb-2">PROYECTOS</h2>
+    <p class="font-serif text-[18px] italic font-light text-cream-dim mb-12">Una selección del trabajo en video</p>
 
-    <div class="columns-1 md:columns-2 gap-6">
-      {proyectos.map((proyecto) => (
-        <div class="break-inside-avoid mb-6">
-          <ProjectCard proyecto={proyecto} />
-        </div>
-      ))}
+    <div class="flex flex-col gap-6">
+      {proyectos.map((proyecto) => <ProjectCard proyecto={proyecto} />)}
     </div>
   </section>
 
   <section
     id="contacto"
-    class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center min-h-[50vh] py-20 px-8 md:px-16 border-b border-cream/10 animate-fade-up"
+    class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center min-h-[50vh] py-16 md:py-20 px-5 sm:px-8 md:px-16 border-b border-cream/10 reveal"
     style="background: radial-gradient(ellipse at 0% 100%, rgba(200,90,40,0.08) 0%, transparent 60%), var(--color-bg);"
   >
     <div>
-      <div class="text-[9px] tracking-[4px] uppercase text-orange mb-4 font-medium">Trabajemos juntos</div>
-      <div class="font-display text-[clamp(48px,7vw,72px)] tracking-[3px] leading-none text-cream mb-5">LET'S<br><span class="text-orange">WORK.</span></div>
+      <div class="text-[10px] tracking-[4px] uppercase text-orange mb-4 font-medium">Trabajemos juntos</div>
+      <h2 class="font-display text-[clamp(48px,7vw,72px)] tracking-[3px] leading-none text-cream mb-5">LET'S<br><span class="text-orange">WORK.</span></h2>
       <p class="text-[14px] text-cream-dim leading-[1.7] max-w-[320px] font-light">¿Tienes un proyecto audiovisual? Hablemos. Desde edición hasta producción completa, estoy listo para sumarme a tu equipo.</p>
     </div>
 
     <div class="flex flex-col gap-5">
-      <a href={`mailto:${contacto.email}`} class="group flex items-center gap-4 py-5 px-6 border border-cream/10 no-underline text-cream-dim text-[13px] font-light tracking-[0.5px] bg-bg-card transition-all hover:border-orange hover:text-cream hover:bg-orange/5 hover:translate-x-1">
+      <a href={`mailto:${contacto.email}`} class="group flex items-center gap-4 py-5 px-6 border border-cream/10 no-underline text-cream-dim text-[13px] font-light tracking-[0.5px] bg-bg-card transition-all hover:border-orange hover:text-cream hover:bg-orange/5 md:hover:translate-x-1">
         <div class="w-8 h-8 border border-orange/40 flex items-center justify-center shrink-0 transition-all group-hover:bg-orange group-hover:border-orange">
-          <svg class="w-3.5 h-3.5 fill-cream-dim group-hover:fill-cream transition-colors" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm8 7l8-5H4l8 5z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-cream-dim group-hover:fill-white transition-colors" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm8 7l8-5H4l8 5z"/></svg>
         </div>
         <div>
-          <span class="block text-[9px] tracking-[3px] uppercase text-orange mb-0.5 font-medium">Email</span>
-          <span class="block">{contacto.email}</span>
+          <span class="block text-[10px] tracking-[3px] uppercase text-orange mb-0.5 font-medium">Email</span>
+          <span class="block break-all">{contacto.email}</span>
         </div>
       </a>
 
-      <a href={`tel:${contacto.telefonoHref}`} class="group flex items-center gap-4 py-5 px-6 border border-cream/10 no-underline text-cream-dim text-[13px] font-light tracking-[0.5px] bg-bg-card transition-all hover:border-orange hover:text-cream hover:bg-orange/5 hover:translate-x-1">
+      <a href={`tel:${contacto.telefonoHref}`} class="group flex items-center gap-4 py-5 px-6 border border-cream/10 no-underline text-cream-dim text-[13px] font-light tracking-[0.5px] bg-bg-card transition-all hover:border-orange hover:text-cream hover:bg-orange/5 md:hover:translate-x-1">
         <div class="w-8 h-8 border border-orange/40 flex items-center justify-center shrink-0 transition-all group-hover:bg-orange group-hover:border-orange">
-          <svg class="w-3.5 h-3.5 fill-cream-dim group-hover:fill-cream transition-colors" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l1.17-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-cream-dim group-hover:fill-white transition-colors" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l1.17-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         </div>
         <div>
-          <span class="block text-[9px] tracking-[3px] uppercase text-orange mb-0.5 font-medium">Teléfono</span>
+          <span class="block text-[10px] tracking-[3px] uppercase text-orange mb-0.5 font-medium">Teléfono</span>
           <span class="block">{contacto.telefono}</span>
         </div>
       </a>
 
-      <a href={contacto.behance} target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 py-5 px-6 border border-cream/10 no-underline text-cream-dim text-[13px] font-light tracking-[0.5px] bg-bg-card transition-all hover:border-orange hover:text-cream hover:bg-orange/5 hover:translate-x-1">
+      <a href={contacto.behance} target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 py-5 px-6 border border-cream/10 no-underline text-cream-dim text-[13px] font-light tracking-[0.5px] bg-bg-card transition-all hover:border-orange hover:text-cream hover:bg-orange/5 md:hover:translate-x-1">
         <div class="w-8 h-8 border border-orange/40 flex items-center justify-center shrink-0 transition-all group-hover:bg-orange group-hover:border-orange">
-          <svg class="w-3.5 h-3.5 fill-cream-dim group-hover:fill-cream transition-colors" viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 1.202.483 1.808 1.348 1.808.204 0 .422-.043.596-.134.174-.09.32-.22.413-.41h3.397zm-5.126-8c-1.813 0-2.347 1.059-2.518 1.873h4.908c-.19-.815-.611-1.873-2.39-1.873zm-13.58 5.895c.535 0 1.02-.406 1.02-1.154 0-.724-.484-1.13-1.02-1.13-.536 0-1.021.406-1.021 1.13 0 .748.485 1.154 1.021 1.154zm-3.37-9.895h5.43c2.29 0 3.626 1.15 3.626 3.25 0 1.59-.88 2.44-1.75 2.75.98.26 2.09 1.16 2.09 2.9 0 2.31-1.54 3.6-4.19 3.6H1.65V5z"/></svg>
+          <svg class="w-3.5 h-3.5 fill-cream-dim group-hover:fill-white transition-colors" viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 1.202.483 1.808 1.348 1.808.204 0 .422-.043.596-.134.174-.09.32-.22.413-.41h3.397zm-5.126-8c-1.813 0-2.347 1.059-2.518 1.873h4.908c-.19-.815-.611-1.873-2.39-1.873zm-13.58 5.895c.535 0 1.02-.406 1.02-1.154 0-.724-.484-1.13-1.02-1.13-.536 0-1.021.406-1.021 1.13 0 .748.485 1.154 1.021 1.154zm-3.37-9.895h5.43c2.29 0 3.626 1.15 3.626 3.25 0 1.59-.88 2.44-1.75 2.75.98.26 2.09 1.16 2.09 2.9 0 2.31-1.54 3.6-4.19 3.6H1.65V5z"/></svg>
         </div>
         <div>
-          <span class="block text-[9px] tracking-[3px] uppercase text-orange mb-0.5 font-medium">Portfolio</span>
+          <span class="block text-[10px] tracking-[3px] uppercase text-orange mb-0.5 font-medium">Portfolio</span>
           <span class="block">behance.net/davidlopera4</span>
         </div>
       </a>
     </div>
   </section>
 
-  <footer class="py-6 px-8 md:px-16 flex justify-between items-center">
-    <span class="text-[10px] tracking-[2px] uppercase text-cream-dim">David Stiven Lopera Atehortúa · Medellín, Colombia</span>
-    <span class="font-display text-[14px] tracking-[2px] text-orange">2025</span>
+  <footer class="py-6 px-5 sm:px-8 md:px-16 flex flex-col sm:flex-row gap-2 sm:justify-between sm:items-center">
+    <span class="text-[10px] tracking-[2px] uppercase text-cream-dim">David Stiven Lopera Atehortúa · {ubicacion}</span>
+    <span class="font-display text-[14px] tracking-[2px] text-orange">{new Date().getFullYear()}</span>
   </footer>
 
 </Layout>

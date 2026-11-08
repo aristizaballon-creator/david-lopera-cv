@@ -1,133 +1,245 @@
 ---
 import '../styles/global.css';
 import { proyectos } from '../data/projects';
-import { contacto } from '../data/cv';
+import { contacto, ubicacion } from '../data/cv';
 
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = 'David Lopera — Comunicador audiovisual y editor de video en Medellín y Bogotá. Edición, animación, motion graphics y contenido para redes sociales.',
+} = Astro.props;
+
+const secciones = [
+  { href: '#hero', label: 'Inicio' },
+  { href: '#perfil', label: 'Perfil' },
+  { href: '#experiencia', label: 'Experiencia' },
+  { href: '#educacion', label: 'Educación' },
+  { href: '#habilidades', label: 'Habilidades' },
+  { href: '#proyectos', label: 'Proyectos' },
+  { href: '#contacto', label: 'Contacto' },
+];
+
+const navClass =
+  'nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-colors duration-200 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5';
 ---
 
 <!doctype html>
 <html lang="es">
 <head>
-  <link rel="icon" type="image/png" href="/src/assets/favicon.png" />
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0b0907" id="meta-theme-color">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <script is:inline>
+    (function () {
+      var t;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      var r = document.documentElement;
+      r.dataset.theme = t;
+      r.classList.add('js');
+      document.getElementById('meta-theme-color').content = t === 'light' ? '#f6f1e7' : '#0b0907';
+    })();
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://i.ytimg.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
-<body class="flex min-h-screen overflow-x-hidden">
+<body class="min-h-screen overflow-x-hidden">
+
+  <!-- BARRA SUPERIOR MÓVIL -->
+  <header class="md:hidden fixed top-0 inset-x-0 z-40 h-14 flex items-center justify-between px-5 bg-bg-sidebar/90 backdrop-blur-md border-b border-cream/10">
+    <a href="#hero" class="nav-link font-display text-[20px] tracking-[1px] text-cream no-underline">DAVID LOPERA</a>
+    <div class="flex items-center gap-1">
+      <button type="button" class="theme-toggle w-11 h-11 flex items-center justify-center text-cream-dim hover:text-orange transition-colors" aria-label="Cambiar entre modo día y modo noche">
+        <svg class="icon-sun w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button type="button" id="menu-toggle" class="w-11 h-11 flex items-center justify-center text-cream" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div id="sidebar-backdrop" class="md:hidden fixed inset-0 z-40 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300"></div>
 
   <!-- SIDEBAR -->
-  <aside class="w-[240px] min-h-screen bg-bg-sidebar border-r border-cream/10 fixed top-0 left-0 flex flex-col py-10 z-50 transform -translate-x-full md:translate-x-0 transition-transform">
-    <div class="px-7 pb-9 border-b border-cream/10">
-      <div class="font-body text-[9px] font-medium tracking-[3px] uppercase text-orange mb-2">Portfolio</div>
-      <div class="font-display text-[26px] tracking-[1px] leading-[1.1] text-cream">DAVID<br>LOPERA</div>
+  <aside id="sidebar" class="w-[260px] md:w-[240px] h-dvh bg-bg-sidebar border-r border-cream/10 fixed top-0 left-0 flex flex-col pt-8 md:pt-10 z-50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out">
+    <div class="px-7 pb-7 md:pb-9 border-b border-cream/10 flex items-start justify-between gap-2">
+      <div>
+        <div class="font-body text-[10px] font-medium tracking-[3px] uppercase text-orange mb-2">Portfolio</div>
+        <div class="font-display text-[26px] tracking-[1px] leading-[1.1] text-cream">DAVID<br>LOPERA</div>
+      </div>
+      <button type="button" class="theme-toggle hidden md:flex w-9 h-9 -mr-2 items-center justify-center text-cream-dim hover:text-orange transition-colors" aria-label="Cambiar entre modo día y modo noche" title="Modo día / noche">
+        <svg class="icon-sun w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button type="button" id="menu-close" class="md:hidden w-11 h-11 -mr-3 -mt-2 flex items-center justify-center text-cream-dim" aria-label="Cerrar menú">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
     </div>
 
-    <nav class="flex-1 py-8 overflow-y-auto">
-      <div class="text-[8px] tracking-[3px] uppercase text-cream-dim px-7 mb-3 mt-2">Navegación</div>
-      <a href="#hero" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5 active">
-        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Inicio
-      </a>
-      <a href="#perfil" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
-        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Perfil
-      </a>
-      <a href="#experiencia" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
-        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Experiencia
-      </a>
-      <a href="#educacion" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
-        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Educación
-      </a>
-      <a href="#habilidades" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
-        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Habilidades
-      </a>
-      <a href="#proyectos" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
-        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Proyectos
-      </a>
-      <a href="#contacto" class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5">
-        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Contacto
-      </a>
-
-      <div class="text-[8px] tracking-[3px] uppercase text-cream-dim px-7 mb-3 mt-7">Proyectos</div>
-      {proyectos.map((proyecto) => (
-        <a
-          href={`#proyecto-${proyecto.id}`}
-          class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5"
-        >
-          <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>{proyecto.titulo}
+    <nav class="flex-1 py-6 md:py-8 overflow-y-auto overscroll-contain sidebar-nav" aria-label="Secciones">
+      <div class="text-[9px] tracking-[3px] uppercase text-cream-dim px-7 mb-3 mt-2">Navegación</div>
+      {secciones.map((s) => (
+        <a href={s.href} class={`${navClass} nav-link`}>
+          <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-200 dot"></span>{s.label}
         </a>
       ))}
-      <a
-        href={contacto.behance}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="nav-item flex items-center gap-3 py-2.5 px-7 text-[12px] tracking-[1.5px] uppercase text-cream-dim no-underline cursor-pointer transition-all duration-250 border-l-2 border-transparent font-medium hover:text-cream hover:border-orange hover:bg-orange/5"
-      >
-        <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-250 dot"></span>Ver Portfolio
+
+      <div class="text-[9px] tracking-[3px] uppercase text-cream-dim px-7 mb-3 mt-7">Proyectos</div>
+      {proyectos.map((proyecto) => (
+        <a href={`#proyecto-${proyecto.id}`} class={`${navClass} nav-link`}>
+          <span class="w-1 h-1 rounded-full bg-orange opacity-0 transition-opacity duration-200 dot"></span>{proyecto.titulo}
+        </a>
+      ))}
+      <a href={contacto.behance} target="_blank" rel="noopener noreferrer" class={navClass}>
+        <span class="w-1 h-1 rounded-full bg-orange opacity-0 dot"></span>Ver Portfolio ↗
       </a>
     </nav>
 
-    <div class="px-7 py-6 border-t border-cream/10 text-[10px] leading-[2] text-cream-dim">
-      <div class="flex items-center gap-2 mb-1">
+    <div class="px-7 py-6 border-t border-cream/10 text-[11px] leading-[2] text-cream-dim pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+      <div class="flex items-center gap-2 mb-1 min-w-0">
         <svg class="w-2.5 h-2.5 shrink-0 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        <a href={`mailto:${contacto.email}`} class="hover:text-orange transition-colors">{contacto.email}</a>
+        <a href={`mailto:${contacto.email}`} class="hover:text-orange transition-colors truncate">{contacto.email}</a>
       </div>
       <div class="flex items-center gap-2 mb-1">
         <svg class="w-2.5 h-2.5 shrink-0 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l1.17-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        <span>{contacto.telefono}</span>
+        <a href={`tel:${contacto.telefonoHref}`} class="hover:text-orange transition-colors">{contacto.telefono}</a>
       </div>
       <div class="flex items-center gap-2 mb-1">
         <svg class="w-2.5 h-2.5 shrink-0 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span>Medellín, Colombia</span>
+        <span>{ubicacion}</span>
       </div>
     </div>
   </aside>
 
   <!-- MAIN CONTENT -->
-  <main class="flex-1 md:ml-[240px] min-h-screen">
+  <main class="md:ml-[240px] min-h-screen pt-14 md:pt-0">
     <slot />
   </main>
 
   <script>
-    // Resalta el ítem de menú de la sección visible (igual al original)
-    const sections = document.querySelectorAll('section[id]');
-    const navItems = document.querySelectorAll<HTMLAnchorElement>('.nav-item[href^="#"]');
+    const root = document.documentElement;
+    const metaTheme = document.getElementById('meta-theme-color') as HTMLMetaElement | null;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navItems.forEach(item => {
-            item.classList.remove('active', 'text-cream', 'border-orange', 'bg-orange/5');
-            item.querySelector('.dot')?.classList.remove('opacity-100');
-
-            if (item.getAttribute('href') === '#' + entry.target.id) {
-              item.classList.add('active', 'text-cream', 'border-orange', 'bg-orange/5');
-              item.querySelector('.dot')?.classList.add('opacity-100');
-            }
-          });
-        }
-      });
-    }, { threshold: 0.35 });
-
-    sections.forEach(s => observer.observe(s));
-
-    // Scroll suave al hacer clic, sin ensuciar la URL con el hash (igual al original)
-    navItems.forEach(item => {
-      item.addEventListener('click', e => {
-        const href = item.getAttribute('href');
-        if (!href || href === '#') return;
-        const target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
+    // ---- Modo día / noche ----
+    document.querySelectorAll<HTMLButtonElement>('.theme-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+        root.classList.add('theme-transition');
+        root.dataset.theme = next;
+        if (metaTheme) metaTheme.content = next === 'light' ? '#f6f1e7' : '#0b0907';
+        try { localStorage.setItem('theme', next); } catch {}
+        window.setTimeout(() => root.classList.remove('theme-transition'), 350);
       });
     });
+
+    // ---- Menú móvil ----
+    const sidebar = document.getElementById('sidebar')!;
+    const backdrop = document.getElementById('sidebar-backdrop')!;
+    const menuToggle = document.getElementById('menu-toggle')!;
+    const menuClose = document.getElementById('menu-close')!;
+    const desktop = window.matchMedia('(min-width: 768px)');
+
+    const setMenu = (open: boolean) => {
+      sidebar.classList.toggle('-translate-x-full', !open);
+      backdrop.classList.toggle('opacity-0', !open);
+      backdrop.classList.toggle('pointer-events-none', !open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+      sidebar.inert = !open && !desktop.matches;
+      if (open) menuClose.focus();
+    };
+    sidebar.inert = !desktop.matches;
+
+    menuToggle.addEventListener('click', () => setMenu(true));
+    menuClose.addEventListener('click', () => setMenu(false));
+    backdrop.addEventListener('click', () => setMenu(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
+        setMenu(false);
+        menuToggle.focus();
+      }
+    });
+    desktop.addEventListener('change', () => setMenu(false));
+
+    // ---- Scroll suave sin ensuciar la URL ----
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    document.querySelectorAll<HTMLAnchorElement>('a.nav-link[href^="#"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        const target = document.querySelector(link.getAttribute('href')!);
+        if (!target) return;
+        e.preventDefault();
+        if (!desktop.matches) setMenu(false);
+        target.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+      });
+    });
+
+    // ---- Resaltar en el menú la sección y el proyecto que cruzan el centro de la pantalla ----
+    const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('#sidebar a.nav-link[href^="#"]'));
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('section[id]'));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[id^="proyecto-"]'));
+    const activeClasses = ['text-cream', 'border-orange', 'bg-orange/5'];
+    let lastKey = '';
+
+    const atCenter = (els: HTMLElement[]) => {
+      const y = window.innerHeight / 2;
+      return els.find((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top <= y && r.bottom > y;
+      })?.id;
+    };
+
+    const updateNav = () => {
+      const active = [atCenter(sections), atCenter(cards)];
+      const key = active.join('|');
+      if (key === lastKey) return;
+      lastKey = key;
+      navLinks.forEach((link) => {
+        const on = active.includes(link.getAttribute('href')!.slice(1));
+        activeClasses.forEach((c) => link.classList.toggle(c, on));
+        link.querySelector('.dot')?.classList.toggle('opacity-100', on);
+        if (on) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateNav(); ticking = false; });
+    }, { passive: true });
+    window.addEventListener('resize', updateNav, { passive: true });
+    updateNav();
+
+    // ---- Revelado al hacer scroll ----
+    const revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
   </script>
 </body>
 </html>

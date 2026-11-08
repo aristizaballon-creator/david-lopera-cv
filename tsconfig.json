@@ -6,8 +6,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "strict": true,
     "allowJs": true,
     "skipLibCheck": true,

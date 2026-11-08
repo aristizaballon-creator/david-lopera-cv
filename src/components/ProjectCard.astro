@@ -1,5 +1,5 @@
 ---
-import { YouTubePlayer } from './YoutubePlayer';
+import YouTubeVideo from './YouTubeVideo.astro';
 import { getYouTubeId, type Proyecto } from '../data/projects';
 
 interface Props {
@@ -11,29 +11,29 @@ const horizontales = proyecto.videos.filter((v) => v.tipo === 'horizontal');
 const verticales = proyecto.videos.filter((v) => v.tipo === 'vertical');
 ---
 
-<div
+<article
   id={`proyecto-${proyecto.id}`}
-  class="exp-card group scroll-mt-24 relative bg-bg-card border border-cream/10 p-7 transition-transform hover:-translate-y-1 hover:border-orange/40"
+  class="exp-card scroll-mt-20 md:scroll-mt-8 relative bg-bg-card border border-cream/10 p-5 sm:p-7 transition-colors hover:border-orange/40"
 >
   <div class="mb-6">
-    <div class="font-display text-[22px] tracking-[1px] text-cream mb-1">{proyecto.titulo}</div>
+    <h3 class="font-display text-[22px] tracking-[1px] text-cream mb-1">{proyecto.titulo}</h3>
     <div class="text-[11px] tracking-[2px] uppercase text-gold mb-3 font-medium">{proyecto.rol}</div>
     <p class="text-[13px] leading-[1.7] text-cream-dim font-light">{proyecto.descripcion}</p>
   </div>
 
   {horizontales.length > 0 && (
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
       {horizontales.map((video) => (
-        <YouTubePlayer client:visible videoId={getYouTubeId(video.id)} title={video.titulo} />
+        <YouTubeVideo videoId={getYouTubeId(video.id)} title={`${proyecto.titulo} — ${video.titulo}`} />
       ))}
     </div>
   )}
 
   {verticales.length > 0 && (
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(110px,150px))] justify-start gap-3 mt-4">
+    <div class:list={['grid grid-cols-3 sm:grid-cols-[repeat(auto-fill,minmax(120px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-2 sm:gap-3', horizontales.length > 0 && 'mt-4']}>
       {verticales.map((video) => (
-        <YouTubePlayer client:visible videoId={getYouTubeId(video.id)} title={video.titulo} vertical />
+        <YouTubeVideo videoId={getYouTubeId(video.id)} title={`${proyecto.titulo} — ${video.titulo}`} vertical />
       ))}
     </div>
   )}
-</div>
+</article>

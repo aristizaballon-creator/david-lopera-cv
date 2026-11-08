@@ -11,7 +11,7 @@ export interface Experiencia {
 
 export const experiencia: Experiencia[] = [
   {
-    fecha: "Sep 2025 — julio 2026",
+    fecha: "Sep 2025 — Jul 2026",
     empresa: "KN AGENCY",
     rol: "Editor Freelancer",
     descripcion:
@@ -19,7 +19,7 @@ export const experiencia: Experiencia[] = [
     featured: true,
   },
   {
-    fecha: "Sep 2023 — julio 2024",
+    fecha: "Sep 2023 — Jul 2024",
     empresa: "EL LABORATORIO",
     rol: "Editor Freelancer",
     descripcion:
@@ -45,13 +45,6 @@ export const experiencia: Experiencia[] = [
     rol: "Comunicador Audiovisual",
     descripcion:
       "Camarógrafo para circuitos cerrados de televisión (streaming) y producción/edición de video para las diferentes comunas de Medellín.",
-  },
-  {
-    fecha: "Ago 2019 — Oct 2019",
-    empresa: "ALCALDÍA ENVIGADO",
-    rol: "Editor & Animador · Campaña",
-    descripcion:
-      "Acompañamiento editorial para la campaña del candidato Andrés Torres. Edición y animación de productos para múltiples redes sociales.",
   },
   {
     fecha: "Ene 2018 — Ene 2019",
@@ -130,6 +123,8 @@ export const habilidades: GrupoHabilidades[] = [
     ],
   },
 ];
+
+export const ubicacion = "Medellín · Bogotá, Colombia";
 
 export const contacto = {
   email: "davidlop717@gmail.com",

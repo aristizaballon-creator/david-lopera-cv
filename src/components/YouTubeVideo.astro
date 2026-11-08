@@ -1,0 +1,53 @@
+---
+interface Props {
+  videoId: string;
+  title: string;
+  vertical?: boolean;
+}
+
+const { videoId, title, vertical = false } = Astro.props;
+---
+
+<div class={`yt relative ${vertical ? 'aspect-[9/16]' : 'aspect-video'} w-full overflow-hidden bg-bg-card border border-cream/10`} data-id={videoId} data-title={title}>
+  <button type="button" class="yt-play group absolute inset-0 w-full h-full flex items-center justify-center cursor-pointer" aria-label={`Reproducir: ${title}`}>
+    <img
+      src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      width="480"
+      height="360"
+      class="absolute inset-0 w-full h-full object-cover opacity-85 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
+    />
+    <span class={`relative ${vertical ? 'w-11 h-11' : 'w-14 h-14'} bg-orange group-hover:bg-orange-light rounded-full flex items-center justify-center shadow-xl transition duration-300 group-hover:scale-110`}>
+      <svg class="w-1/2 h-1/2 text-white translate-x-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+    </span>
+  </button>
+</div>
+
+<script>
+  // Un solo listener para todos los videos; solo uno se reproduce a la vez
+  let activo: HTMLElement | null = null;
+
+  const detener = (contenedor: HTMLElement) => {
+    contenedor.querySelector('iframe')?.remove();
+    contenedor.querySelector<HTMLElement>('.yt-play')?.classList.remove('hidden');
+  };
+
+  document.addEventListener('click', (e) => {
+    const boton = (e.target as Element).closest<HTMLButtonElement>('.yt-play');
+    if (!boton) return;
+    const contenedor = boton.parentElement as HTMLElement;
+    if (activo && activo !== contenedor) detener(activo);
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${contenedor.dataset.id}?autoplay=1&rel=0&playsinline=1`;
+    iframe.title = contenedor.dataset.title ?? '';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+    iframe.allowFullscreen = true;
+    iframe.className = 'absolute inset-0 w-full h-full border-0';
+    boton.classList.add('hidden');
+    contenedor.appendChild(iframe);
+    activo = contenedor;
+  });
+</script>

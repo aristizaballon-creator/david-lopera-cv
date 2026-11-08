@@ -9,24 +9,71 @@
   --color-orange: #c85a28;
   --color-orange-light: #e06b30;
   --color-gold: #b8913f;
-  
+
   --font-display: 'Bebas Neue', sans-serif;
   --font-serif: 'Cormorant Garamond', serif;
   --font-body: 'DM Sans', sans-serif;
 }
 
+/* Modo día: se sobrescriben los mismos tokens, así todas las utilidades de Tailwind cambian solas */
+:root[data-theme="light"] {
+  --color-bg: #f6f1e7;
+  --color-bg-sidebar: #efe8da;
+  --color-bg-card: #fffbf3;
+  --color-cream: #1d1712;
+  --color-cream-dim: #5f5444;
+  --color-orange: #b24c1d;
+  --color-orange-light: #c85a28;
+  --color-gold: #85651f;
+  color-scheme: light;
+}
+
+:root {
+  color-scheme: dark;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
   }
-  
+
   body {
     background-color: var(--color-bg);
     color: var(--color-cream);
     font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Animación fadeUp del original */
+  :root.theme-transition,
+  :root.theme-transition * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease !important;
+  }
+
+  h1, h2 {
+    hyphens: none;
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+
+  section[id] {
+    scroll-margin-top: 4rem;
+  }
+  @media (min-width: 768px) {
+    section[id] { scroll-margin-top: 0; }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-orange);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-orange);
+    color: #fff;
+  }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -36,13 +83,28 @@
     animation: fadeUp 0.7s ease both;
   }
 
-  /* Scrollbar personalizado */
-  ::-webkit-scrollbar { width: 3px; }
+  /* Revelado al hacer scroll; solo se oculta si hay JS para no dejar contenido invisible */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .animate-fade-up { animation: none; }
+    .js .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--color-bg); }
-  ::-webkit-scrollbar-thumb { background: var(--color-orange); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: var(--color-orange); border-radius: 3px; }
 }
 
-/* Efectos de la línea naranja de las tarjetas de experiencia */
 .exp-card::before {
   content: '';
   position: absolute;
@@ -53,3 +115,34 @@
 }
 .exp-card:hover::before { height: 100%; }
 .exp-card.featured::before { height: 100%; }
+
+/* El ícono indica el modo al que se cambia */
+.theme-toggle .icon-moon { display: none; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+
+/* El degradado del hero usa el color de fondo activo, así se adapta al modo día */
+.hero-overlay {
+  --o: var(--color-bg);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--o) 95%, transparent) 0%, color-mix(in srgb, var(--o) 70%, transparent) 40%, color-mix(in srgb, var(--o) 15%, transparent) 100%),
+    linear-gradient(0deg, color-mix(in srgb, var(--o) 88%, transparent) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 20%, rgba(200, 90, 40, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(184, 145, 63, 0.06) 0%, transparent 50%);
+}
+@media (max-width: 767px) {
+  .hero-overlay {
+    background:
+      linear-gradient(0deg, color-mix(in srgb, var(--o) 96%, transparent) 0%, color-mix(in srgb, var(--o) 80%, transparent) 45%, color-mix(in srgb, var(--o) 30%, transparent) 100%);
+  }
+}
+@media (min-width: 768px) {
+  :root[data-theme="light"] .hero-overlay {
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--o) 94%, transparent) 0%, color-mix(in srgb, var(--o) 55%, transparent) 42%, transparent 75%),
+      linear-gradient(0deg, color-mix(in srgb, var(--o) 80%, transparent) 0%, transparent 35%);
+  }
+}
+
+.sidebar-nav { scrollbar-width: none; }
+.sidebar-nav::-webkit-scrollbar { display: none; }

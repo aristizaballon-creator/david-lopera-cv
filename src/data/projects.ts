@@ -86,24 +86,9 @@ export const proyectos: Proyecto[] = [
   },
 
   {
-    id: "alcaldia-envigado",
-    titulo: "ALCALDÍA ENVIGADO",
-    rol: "Editor & Animador · Campaña",
-    descripcion:
-      "Edición y animación de productos para múltiples redes sociales.",
-    videos: [
-      { id: "-9jcfYA_uN0", titulo: "Spot 1", tipo: "horizontal" },
-      { id: "5OOxLu3A-yA", titulo: "Spot 2", tipo: "horizontal" },
-      { id: "RHq5KMpvthA", titulo: "Spot 3", tipo: "horizontal" },
-      { id: "dwbBzFOQwio", titulo: "Spot 4", tipo: "horizontal" },
-      { id: "oQ5U8dTlocw", titulo: "Spot 5", tipo: "horizontal" },
-      { id: "P8Lv9-T19Ko", titulo: "Spot 6", tipo: "horizontal" },
-    ],
-  },
-  {
     id: "pp-y-ppl",
     titulo: "PP Y PPL",
-    rol: "CAMARÓGRAFO Y EDITOR DE VIDEO", 
+    rol: "Camarógrafo y Editor de Video",
     descripcion: "Camarografía para circuito cerrado de televisión y streaming",
     videos: [
       { id: "QVTDZmBsj3U", titulo: "Horizontal 1", tipo: "horizontal" },
