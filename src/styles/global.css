@@ -5,7 +5,7 @@
   --color-bg-sidebar: #0e0b09;
   --color-bg-card: #141009;
   --color-cream: #e4d8c0;
-  --color-cream-dim: #9a8e7a;
+  --color-cream-dim: #b4a891;
   --color-orange: #c85a28;
   --color-orange-light: #e06b30;
   --color-gold: #b8913f;
@@ -17,14 +17,15 @@
 
 /* Modo día: se sobrescriben los mismos tokens, así todas las utilidades de Tailwind cambian solas */
 :root[data-theme="light"] {
-  --color-bg: #f6f1e7;
-  --color-bg-sidebar: #efe8da;
-  --color-bg-card: #fffbf3;
-  --color-cream: #1d1712;
-  --color-cream-dim: #5f5444;
-  --color-orange: #b24c1d;
-  --color-orange-light: #c85a28;
-  --color-gold: #85651f;
+  /* Pergamino cálido de tono medio: menos brillo, texto con contraste alto */
+  --color-bg: #e8dfcd;
+  --color-bg-sidebar: #ded3bd;
+  --color-bg-card: #f0e8d8;
+  --color-cream: #1a140e;
+  --color-cream-dim: #3b3125;
+  --color-orange: #a5431a;
+  --color-orange-light: #bb5222;
+  --color-gold: #765614;
   color-scheme: light;
 }
 
@@ -33,7 +34,9 @@
 }
 
 @layer base {
+  /* Todo el texto está en rem: así crece de forma pareja en pantallas grandes */
   html {
+    font-size: 100%;
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
     text-size-adjust: 100%;
@@ -56,6 +59,9 @@
     overflow-wrap: normal;
     word-break: keep-all;
   }
+
+  @media (min-width: 1024px) { html { font-size: 106.25%; } }
+  @media (min-width: 1440px) { html { font-size: 112.5%; } }
 
   section[id] {
     scroll-margin-top: 4rem;
@@ -146,3 +152,129 @@
 
 .sidebar-nav { scrollbar-width: none; }
 .sidebar-nav::-webkit-scrollbar { display: none; }
+
+
+/* ---------- Carrusel de videos ---------- */
+.carousel-track {
+  --gap: 0.75rem;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  outline-offset: 4px;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  user-select: none;
+}
+.carousel-track.is-dragging .carousel-item { pointer-events: none; }
+
+.carousel-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+}
+/* Cantidad visible por pantalla: en celular se asoma el siguiente para invitar a deslizar */
+.carousel-track--v { --n: 2.4; }
+.carousel-track--h { --n: 1.15; }
+@media (min-width: 640px) {
+  .carousel-track { --gap: 1rem; }
+  .carousel-track--v { --n: 3.4; }
+  .carousel-track--h { --n: 1.6; }
+}
+@media (min-width: 1024px) {
+  .carousel-track--v { --n: 4; }
+  .carousel-track--h { --n: 2; }
+}
+@media (min-width: 1280px) {
+  .carousel-track--v { --n: 5; }
+}
+@media (min-width: 1680px) {
+  .carousel-track--v { --n: 6; }
+  .carousel-track--h { --n: 3; }
+}
+
+.carousel-btn {
+  width: 2.5rem; height: 2.5rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--color-cream) 18%, transparent);
+  color: var(--color-cream);
+  transition: background-color .2s, border-color .2s, color .2s, opacity .2s;
+  cursor: pointer;
+}
+.carousel-btn svg { width: 1.1rem; height: 1.1rem; }
+.carousel-btn:hover:not(:disabled) { background: var(--color-orange); border-color: var(--color-orange); color: #fff; }
+.carousel-btn:disabled { opacity: .3; cursor: default; }
+.carousel.is-static .carousel-nav,
+.carousel.is-static .carousel-progress { visibility: hidden; }
+
+.carousel-progress {
+  margin-top: 0.875rem;
+  height: 2px;
+  background: color-mix(in srgb, var(--color-cream) 12%, transparent);
+  overflow: hidden;
+}
+.carousel-progress span {
+  display: block; height: 100%;
+  background: var(--color-orange);
+  transition: transform .15s linear;
+}
+
+/* ---------- Reproductor ---------- */
+.yt .yt-poster { transition: opacity .35s ease; }
+.yt.is-started .yt-poster { opacity: 0; pointer-events: none; }
+.yt.is-loading .yt-icon { animation: ytPulse 1s ease-in-out infinite; }
+@keyframes ytPulse { 50% { transform: scale(.85); opacity: .7; } }
+
+/* El iframe sobresale arriba y abajo: el video queda del tamaño exacto del recuadro
+   y el título, logo y barra de YouTube quedan fuera de la vista */
+.yt-crop { position: absolute; left: 0; right: 0; top: -70px; bottom: -70px; }
+.yt-crop iframe { width: 100%; height: 100%; border: 0; pointer-events: none; }
+.yt-shield { position: absolute; inset: 0; z-index: 2; background: transparent; cursor: pointer; }
+
+.yt-pause-ui {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, .78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease;
+}
+.yt-pause-ui > span {
+  width: 3rem; height: 3rem; border-radius: 9999px;
+  background: var(--color-orange); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.yt-pause-ui svg { width: 50%; height: 50%; transform: translateX(1px); }
+.yt.is-paused .yt-pause-ui { opacity: 1; }
+
+.yt-progress {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+  height: 3px; background: rgba(255, 255, 255, .15);
+  opacity: 0; transition: opacity .3s; pointer-events: none;
+}
+.yt-progress span {
+  display: block; height: 100%; width: 100%;
+  background: var(--color-orange);
+  transform-origin: left;
+  transform: scaleX(var(--yt-progress, 0));
+  transition: transform .25s linear;
+}
+.yt.is-started .yt-progress { opacity: 1; }
+.yt.needs-tap .yt-poster { opacity: 0; pointer-events: none; }
+.yt.needs-tap .yt-shield { pointer-events: none; }
+.yt.needs-tap .yt-crop iframe { pointer-events: auto; }
+
+/* Frase del inicio: sobre la foto necesita el tono de texto principal en modo día */
+:root[data-theme="light"] .hero-frase { color: var(--color-cream); }
+
+.prose-cv strong { color: var(--color-cream); font-weight: 500; }

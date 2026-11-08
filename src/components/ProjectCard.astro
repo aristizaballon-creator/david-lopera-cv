@@ -1,39 +1,35 @@
 ---
-import YouTubeVideo from './YouTubeVideo.astro';
-import { getYouTubeId, type Proyecto } from '../data/projects';
+import VideoCarousel from './VideoCarousel.astro';
+import type { Proyecto } from '../data/projects';
+import { ui, tr, type Lang } from '../i18n';
 
 interface Props {
   proyecto: Proyecto;
+  lang: Lang;
 }
 
-const { proyecto } = Astro.props;
+const { proyecto, lang } = Astro.props;
+const t = ui[lang].carrusel;
 const horizontales = proyecto.videos.filter((v) => v.tipo === 'horizontal');
 const verticales = proyecto.videos.filter((v) => v.tipo === 'vertical');
 ---
 
 <article
   id={`proyecto-${proyecto.id}`}
-  class="exp-card scroll-mt-20 md:scroll-mt-8 relative bg-bg-card border border-cream/10 p-5 sm:p-7 transition-colors hover:border-orange/40"
+  class="exp-card scroll-mt-20 md:scroll-mt-8 relative bg-bg-card border border-cream/10 p-5 sm:p-7 lg:p-8 transition-colors hover:border-orange/40"
 >
-  <div class="mb-6">
-    <h3 class="font-display text-[22px] tracking-[1px] text-cream mb-1">{proyecto.titulo}</h3>
-    <div class="text-[11px] tracking-[2px] uppercase text-gold mb-3 font-medium">{proyecto.rol}</div>
-    <p class="text-[13px] leading-[1.7] text-cream-dim font-light">{proyecto.descripcion}</p>
+  <div class="mb-6 max-w-[46rem]">
+    <h3 class="font-display text-[1.625rem] tracking-[1px] text-cream mb-1">{proyecto.titulo}</h3>
+    <div class="text-[0.75rem] tracking-[2px] uppercase text-gold mb-3 font-medium">{tr(proyecto.rol, lang)}</div>
+    <p class="text-[1rem] leading-[1.7] text-cream-dim">{tr(proyecto.descripcion, lang)}</p>
   </div>
 
-  {horizontales.length > 0 && (
-    <div class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
-      {horizontales.map((video) => (
-        <YouTubeVideo videoId={getYouTubeId(video.id)} title={`${proyecto.titulo} — ${video.titulo}`} />
-      ))}
-    </div>
-  )}
-
-  {verticales.length > 0 && (
-    <div class:list={['grid grid-cols-3 sm:grid-cols-[repeat(auto-fill,minmax(120px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-2 sm:gap-3', horizontales.length > 0 && 'mt-4']}>
-      {verticales.map((video) => (
-        <YouTubeVideo videoId={getYouTubeId(video.id)} title={`${proyecto.titulo} — ${video.titulo}`} vertical />
-      ))}
-    </div>
-  )}
+  <div class="flex flex-col gap-8">
+    {horizontales.length > 0 && (
+      <VideoCarousel videos={horizontales} label={t.videos} proyecto={proyecto.titulo} lang={lang} />
+    )}
+    {verticales.length > 0 && (
+      <VideoCarousel videos={verticales} label={t.shorts} proyecto={proyecto.titulo} lang={lang} vertical />
+    )}
+  </div>
 </article>

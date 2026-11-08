@@ -3,51 +3,136 @@ interface Props {
   videoId: string;
   title: string;
   vertical?: boolean;
+  playLabel?: string;
 }
 
-const { videoId, title, vertical = false } = Astro.props;
+const { videoId, title, vertical = false, playLabel = 'Reproducir' } = Astro.props;
 ---
 
-<div class={`yt relative ${vertical ? 'aspect-[9/16]' : 'aspect-video'} w-full overflow-hidden bg-bg-card border border-cream/10`} data-id={videoId} data-title={title}>
-  <button type="button" class="yt-play group absolute inset-0 w-full h-full flex items-center justify-center cursor-pointer" aria-label={`Reproducir: ${title}`}>
+<div
+  class={`yt relative ${vertical ? 'aspect-[9/16]' : 'aspect-video'} w-full overflow-hidden bg-black`}
+  data-id={videoId}
+  data-title={title}
+>
+  <button type="button" class="yt-poster group absolute inset-0 z-20 w-full h-full flex items-center justify-center cursor-pointer" aria-label={`${playLabel}: ${title}`}>
     <img
       src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
       alt=""
       loading="lazy"
       decoding="async"
+      draggable="false"
       width="480"
       height="360"
-      class="absolute inset-0 w-full h-full object-cover opacity-85 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
+      onerror="this.closest('.carousel-item')?.remove()"
+      class="absolute inset-0 w-full h-full object-cover opacity-90 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
     />
-    <span class={`relative ${vertical ? 'w-11 h-11' : 'w-14 h-14'} bg-orange group-hover:bg-orange-light rounded-full flex items-center justify-center shadow-xl transition duration-300 group-hover:scale-110`}>
+    <span class="yt-icon relative w-12 h-12 md:w-14 md:h-14 bg-orange group-hover:bg-orange-light rounded-full flex items-center justify-center shadow-xl transition duration-300 group-hover:scale-110">
       <svg class="w-1/2 h-1/2 text-white translate-x-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
     </span>
   </button>
 </div>
 
 <script>
-  // Un solo listener para todos los videos; solo uno se reproduce a la vez
-  let activo: HTMLElement | null = null;
+  // Reproductor sin la interfaz de YouTube: el iframe es más alto que el contenedor
+  // para que el título y el logo queden recortados, y una capa propia controla la reproducción.
+  type Player = { box: HTMLElement; iframe: HTMLIFrameElement; state: number; started: boolean };
+  const players = new Map<string, Player>();
+  let activo: Player | null = null;
+  let seq = 0;
 
-  const detener = (contenedor: HTMLElement) => {
-    contenedor.querySelector('iframe')?.remove();
-    contenedor.querySelector<HTMLElement>('.yt-play')?.classList.remove('hidden');
+  const cmd = (p: Player, func: string, args: unknown[] = []) =>
+    p.iframe.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), '*');
+
+  const render = (p: Player) => {
+    const playing = p.state === 1 || p.state === 3;
+    p.box.classList.toggle('is-playing', playing);
+    p.box.classList.toggle('is-paused', p.started && p.state === 2);
+    p.box.classList.toggle('is-started', p.started && p.state !== 0);
   };
 
-  document.addEventListener('click', (e) => {
-    const boton = (e.target as Element).closest<HTMLButtonElement>('.yt-play');
-    if (!boton) return;
-    const contenedor = boton.parentElement as HTMLElement;
-    if (activo && activo !== contenedor) detener(activo);
+  const destruir = (p: Player) => {
+    p.box.querySelector('.yt-layer')?.remove();
+    p.box.classList.remove('is-playing', 'is-paused', 'is-started', 'is-loading', 'needs-tap');
+    players.forEach((v, k) => { if (v === p) players.delete(k); });
+    if (activo === p) activo = null;
+  };
 
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube-nocookie.com/embed/${contenedor.dataset.id}?autoplay=1&rel=0&playsinline=1`;
-    iframe.title = contenedor.dataset.title ?? '';
-    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
-    iframe.allowFullscreen = true;
-    iframe.className = 'absolute inset-0 w-full h-full border-0';
-    boton.classList.add('hidden');
-    contenedor.appendChild(iframe);
-    activo = contenedor;
+  const crear = (box: HTMLElement) => {
+    const key = `yt${++seq}`;
+    const layer = document.createElement('div');
+    layer.className = 'yt-layer absolute inset-0 z-10';
+    layer.innerHTML = `
+      <div class="yt-crop"><iframe></iframe></div>
+      <button type="button" class="yt-shield" aria-label="${document.documentElement.lang === 'en' ? 'Pause or play' : 'Pausar o reproducir'}"></button>
+      <span class="yt-pause-ui" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></span>
+      <span class="yt-progress" aria-hidden="true"><span></span></span>`;
+    const iframe = layer.querySelector('iframe')!;
+    const params = new URLSearchParams({
+      autoplay: '1', controls: '0', rel: '0', playsinline: '1', iv_load_policy: '3',
+      modestbranding: '1', disablekb: '1', fs: '0', enablejsapi: '1', origin: location.origin,
+    });
+    iframe.src = `https://www.youtube-nocookie.com/embed/${box.dataset.id}?${params}`;
+    iframe.title = box.dataset.title ?? '';
+    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+    iframe.tabIndex = -1;
+    const p: Player = { box, iframe, state: -1, started: false };
+    players.set(key, p);
+    iframe.addEventListener('load', () => {
+      iframe.contentWindow?.postMessage(JSON.stringify({ event: 'listening', id: key, channel: 'widget' }), '*');
+    });
+    // Si el navegador bloquea el autoplay (p. ej. iPhone), se deja tocar el play nativo de YouTube
+    window.setTimeout(() => {
+      if (!p.started && players.get(key) === p) box.classList.add('needs-tap');
+    }, 2500);
+    box.classList.add('is-loading');
+    box.appendChild(layer);
+    return p;
+  };
+
+  window.addEventListener('message', (e) => {
+    if (!/youtube(-nocookie)?\.com$/.test(new URL(e.origin).hostname)) return;
+    let data: any;
+    try { data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch { return; }
+    const p = players.get(data?.id);
+    if (!p) return;
+    const info = data.info;
+    const state = data.event === 'onStateChange' ? info : info?.playerState;
+    if (typeof state === 'number') {
+      p.state = state;
+      if (state === 1) { p.started = true; p.box.classList.remove('is-loading', 'needs-tap'); }
+      render(p);
+    }
+    if (info && typeof info.currentTime === 'number' && info.duration) {
+      p.box.style.setProperty('--yt-progress', String(info.currentTime / info.duration));
+    }
   });
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    const poster = target.closest<HTMLButtonElement>('.yt-poster');
+    const shield = target.closest<HTMLButtonElement>('.yt-shield');
+    if (!poster && !shield) return;
+    const box = (poster ?? shield)!.closest<HTMLElement>('.yt')!;
+    const actual = [...players.values()].find((p) => p.box === box);
+
+    if (actual) {
+      if (actual.state === 1 || actual.state === 3) cmd(actual, 'pauseVideo');
+      else {
+        if (actual.state === 0) cmd(actual, 'seekTo', [0, true]);
+        cmd(actual, 'playVideo');
+      }
+      return;
+    }
+    if (activo) destruir(activo);
+    activo = crear(box);
+  });
+
+  // Pausa el video si sale de la pantalla
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting || !activo || activo.box !== entry.target) return;
+      if (activo.state === 1 || activo.state === 3) cmd(activo, 'pauseVideo');
+    });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('.yt').forEach((el) => io.observe(el));
 </script>

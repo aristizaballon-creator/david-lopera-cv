@@ -1,3 +1,5 @@
+import type { Texto } from "../i18n";
+
 export type VideoTipo = "horizontal" | "vertical";
 
 export interface Video {
@@ -9,8 +11,8 @@ export interface Video {
 export interface Proyecto {
   id: string;
   titulo: string;
-  rol: string;
-  descripcion: string;
+  rol: Texto;
+  descripcion: Texto;
   videos: Video[];
 }
 
@@ -24,9 +26,11 @@ export const proyectos: Proyecto[] = [
   {
     id: "kn-agency",
     titulo: "KN AGENCY",
-    rol: "Video Promocional",
-    descripcion:
-      "Edición de video para contenido CCV enfocado en redes sociales. Producción de piezas audiovisuales optimizadas para el consumo digital.",
+    rol: { es: "Video Promocional", en: "Promotional Video" },
+    descripcion: {
+      es: "Edición de video para contenido CCV enfocado en redes sociales. Producción de piezas audiovisuales optimizadas para el consumo digital.",
+      en: "Video editing for short-form vertical content focused on social media. Audiovisual pieces optimized for digital consumption.",
+    },
     videos: [
       { id: "CdoO5kS8W7M", titulo: "Short 1", tipo: "vertical" },
       { id: "ZrwN9PEf_Jk", titulo: "Short 2", tipo: "vertical" },
@@ -44,9 +48,11 @@ export const proyectos: Proyecto[] = [
   {
     id: "bulffy",
     titulo: "BULFFY",
-    rol: "Contenido Audiovisual",
-    descripcion:
-      "Producción y edición de contenido audiovisual para redes sociales, adaptando formatos horizontales y verticales.",
+    rol: { es: "Contenido Audiovisual", en: "Audiovisual Content" },
+    descripcion: {
+      es: "Producción y edición de contenido audiovisual para redes sociales, adaptando formatos horizontales y verticales.",
+      en: "Production and editing of audiovisual content for social media, adapted to horizontal and vertical formats.",
+    },
     videos: [
       { id: "mES3kbwu38g", titulo: "Video Principal", tipo: "horizontal" },
       { id: "J5VbucNFGpA", titulo: "Short 1", tipo: "vertical" },
@@ -64,9 +70,11 @@ export const proyectos: Proyecto[] = [
   {
     id: "el-laboratorio",
     titulo: "EL LABORATORIO",
-    rol: "Contenido Digital",
-    descripcion:
-      "Editor de video para producciones largas de YouTube y contenido CCV para creadores digitales.",
+    rol: { es: "Contenido Digital", en: "Digital Content" },
+    descripcion: {
+      es: "Editor de video para producciones largas de YouTube y contenido CCV para creadores digitales.",
+      en: "Video editor for long-form YouTube productions and short-form content for digital creators.",
+    },
     videos: [
       { id: "4HCKfANQI6c", titulo: "Short 1", tipo: "vertical" },
       { id: "CVwhGitdhGU", titulo: "Short 2", tipo: "vertical" },
@@ -88,8 +96,8 @@ export const proyectos: Proyecto[] = [
   {
     id: "pp-y-ppl",
     titulo: "PP Y PPL",
-    rol: "Camarógrafo y Editor de Video",
-    descripcion: "Camarografía para circuito cerrado de televisión y streaming",
+    rol: { es: "Camarógrafo y Editor de Video", en: "Camera Operator & Video Editor" },
+    descripcion: { es: "Camarografía para circuito cerrado de televisión y streaming.", en: "Camera work for closed-circuit television and live streaming." },
     videos: [
       { id: "QVTDZmBsj3U", titulo: "Horizontal 1", tipo: "horizontal" },
       { id: "kXeZGzhcEbc", titulo: "Horizontal 2", tipo: "horizontal" },
@@ -101,8 +109,8 @@ export const proyectos: Proyecto[] = [
   {
     id: "freelo",
     titulo: "FREELO",
-    rol: "Realizador de contenidos audiovisuales",
-    descripcion: "Creación de contenidos audiovisuales para plataformas y redes sociales",
+    rol: { es: "Realizador de contenidos audiovisuales", en: "Audiovisual Content Producer" },
+    descripcion: { es: "Creación de contenidos audiovisuales para plataformas y redes sociales.", en: "Audiovisual content creation for platforms and social media." },
     videos: [
       { id: "W4gb4ESJvyw", titulo: "Short 1", tipo: "vertical" },
       { id: "b_RM3xvjKq8", titulo: "Short 2", tipo: "vertical" },
@@ -121,7 +129,6 @@ export const proyectos: Proyecto[] = [
       { id: "_rPXSjesnxw", titulo: "Short 15", tipo: "vertical" },
       { id: "GVzmhnjiclU", titulo: "Short 16", tipo: "vertical" },
       { id: "ANbexiqxFTw", titulo: "Short 17", tipo: "vertical" },
-      { id: "G63sj-Xsbh8", titulo: "Short 18", tipo: "vertical" },
     ],
   },
 ];

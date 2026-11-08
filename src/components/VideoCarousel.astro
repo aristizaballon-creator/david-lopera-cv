@@ -1,0 +1,136 @@
+---
+import YouTubeVideo from './YouTubeVideo.astro';
+import { getYouTubeId, type Video } from '../data/projects';
+import { ui, type Lang } from '../i18n';
+
+interface Props {
+  videos: Video[];
+  vertical?: boolean;
+  label: string;
+  proyecto: string;
+  lang: Lang;
+}
+
+const { videos, vertical = false, label, proyecto, lang } = Astro.props;
+const t = ui[lang].carrusel;
+---
+
+<div class="carousel" data-carousel>
+  <div class="flex items-center justify-between gap-4 mb-3">
+    <div class="text-[0.6875rem] tracking-[3px] uppercase text-cream-dim font-medium">
+      {label} <span class="text-orange">· {videos.length}</span>
+    </div>
+    <div class="carousel-nav flex gap-2">
+      <button type="button" class="carousel-btn" data-dir="-1" aria-label={`${t.anteriores} — ${label} ${t.de} ${proyecto}`} disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="carousel-btn" data-dir="1" aria-label={`${t.siguientes} — ${label} ${t.de} ${proyecto}`}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class:list={['carousel-track', vertical ? 'carousel-track--v' : 'carousel-track--h']}
+    tabindex="0"
+    role="region"
+    aria-label={`${label} ${t.de} ${proyecto}`}
+  >
+    {videos.map((video) => (
+      <div class="carousel-item">
+        <YouTubeVideo videoId={getYouTubeId(video.id)} title={`${proyecto} — ${video.titulo}`} vertical={vertical} playLabel={ui[lang].reproducir} />
+      </div>
+    ))}
+  </div>
+
+  <div class="carousel-progress" aria-hidden="true"><span></span></div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('.carousel-track')!;
+    const [prev, next] = root.querySelectorAll<HTMLButtonElement>('.carousel-btn');
+    const bar = root.querySelector<HTMLElement>('.carousel-progress span')!;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const items = () => Array.from(track.querySelectorAll<HTMLElement>('.carousel-item'));
+    const step = () => {
+      const first = items()[0];
+      if (!first) return track.clientWidth;
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      const perView = Math.max(1, Math.floor((track.clientWidth + gap) / (first.offsetWidth + gap)));
+      return perView * (first.offsetWidth + gap);
+    };
+
+    let raf = 0;
+    const update = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const max = track.scrollWidth - track.clientWidth;
+        const ratio = max > 0 ? track.scrollLeft / max : 1;
+        prev.disabled = track.scrollLeft <= 2;
+        next.disabled = track.scrollLeft >= max - 2;
+        root.classList.toggle('is-static', max <= 2);
+        const visible = max > 0 ? track.clientWidth / track.scrollWidth : 1;
+        bar.style.width = `${visible * 100}%`;
+        bar.style.transform = `translateX(${(ratio * (1 - visible) / visible) * 100}%)`;
+      });
+    };
+
+    [prev, next].forEach((btn) =>
+      btn.addEventListener('click', () => {
+        track.scrollBy({ left: Number(btn.dataset.dir) * step(), behavior: reduced.matches ? 'auto' : 'smooth' });
+      })
+    );
+
+    // Arrastre con mouse (en táctil el desplazamiento es nativo)
+    let down = false, dragged = false, startX = 0, startLeft = 0, lastX = 0, lastT = 0, velocity = 0;
+
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      down = true; dragged = false;
+      startX = lastX = e.clientX; startLeft = track.scrollLeft; lastT = e.timeStamp; velocity = 0;
+    });
+
+    track.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (!dragged && Math.abs(dx) > 6) {
+        dragged = true;
+        track.classList.add('is-dragging');
+        track.setPointerCapture(e.pointerId);
+      }
+      if (!dragged) return;
+      track.scrollLeft = startLeft - dx;
+      const dt = e.timeStamp - lastT;
+      if (dt > 0) velocity = 0.8 * ((e.clientX - lastX) / dt) + 0.2 * velocity;
+      lastX = e.clientX; lastT = e.timeStamp;
+    });
+
+    const end = () => {
+      if (!down) return;
+      down = false;
+      if (!dragged) return;
+      const target = track.scrollLeft - velocity * 220;
+      track.classList.remove('is-dragging');
+      const left = track.getBoundingClientRect().left;
+      const snapTo = items().reduce((best, it) => {
+        const pos = track.scrollLeft + it.getBoundingClientRect().left - left;
+        return Math.abs(pos - target) < Math.abs(best - target) ? pos : best;
+      }, 0);
+      track.scrollTo({ left: snapTo, behavior: reduced.matches ? 'auto' : 'smooth' });
+    };
+    track.addEventListener('pointerup', end);
+    track.addEventListener('pointercancel', end);
+    track.addEventListener('lostpointercapture', end);
+
+    // Un arrastre no debe contar como clic sobre un video
+    track.addEventListener('click', (e) => {
+      if (dragged) { e.preventDefault(); e.stopPropagation(); dragged = false; }
+    }, true);
+
+    track.addEventListener('scroll', update, { passive: true });
+    new ResizeObserver(update).observe(track);
+    update();
+  });
+</script>
